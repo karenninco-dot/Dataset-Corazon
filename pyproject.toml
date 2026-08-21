@@ -10,6 +10,7 @@ readme = "README.md"
 
 dependencies = [
     "pandas>=3.0.5",
+    "pyarrow>=25.0.1",
 ]
 
 [project.urls]
