@@ -88,9 +88,7 @@ def get_user_data() -> pd.DataFrame:
     col1, col2, col3 = st.columns(3)
 
     with col1:
-        sex_label = st.radio(
-            label="Sexo:", options=list(SEX_OPTIONS.keys()), horizontal=False
-        )
+        sex_label = st.radio(label="Sexo:", options=list(SEX_OPTIONS.keys()), horizontal=False)
         user_data["sex"] = SEX_OPTIONS[sex_label]
 
         exang_label = st.radio(
