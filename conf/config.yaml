@@ -1,0 +1,32 @@
+# Hydra configuration for the Corazon FTI pipelines.
+# `hydra.job.chdir: false` keeps the working directory as the project
+# root, so relative paths below (data/...) work the same as running
+# the script by hand.
+hydra:
+  job:
+    chdir: false
+
+data:
+  raw: "data/01_raw/corazon_final_raw.csv"
+  feature: "data/04_feature/corazon_features.parquet"
+
+columns:
+  numeric_continuous: ["age", "rest_bp", "chol", "old_peak"]
+  categoric: ["sex", "chest_pain", "rest_ecg", "thal"]
+  categoric_ordinal: "slope"
+  integer_int16: "max_hr"
+  integer_int8: "ca"
+  boolean: ["fbs", "exang", "disease"]
+  target: "disease"
+  drop_low_value: ["fbs", "rest_bp"]
+
+valid_categories:
+  sex: ["Male", "Female"]
+  chest_pain: ["typical", "asymptomatic", "nonanginal", "nontypical"]
+  rest_ecg: ["normal", "left ventricular hypertrophy", "ST-T wave abnormality"]
+  thal: ["normal", "fixed", "reversable"]
+  fbs: ["0.0", "1.0"]
+  exang: ["0", "1"]
+  slope: ["1", "2", "3"]
+  ca: ["0.0", "1.0", "2.0", "3.0"]
+  disease: ["0", "1"]
