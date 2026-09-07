@@ -13,6 +13,7 @@ from tests.data.test_data_preparation import CFG, sample_raw_df
 
 
 def test_extract_data_reads_csv(tmp_path: Path) -> None:
+    """extract_data debe leer un CSV y devolver el mismo número de filas y columnas."""
     csv_path = tmp_path / "raw.csv"
     expected_df = sample_raw_df()
     expected_df.to_csv(csv_path, index=False)
@@ -24,6 +25,7 @@ def test_extract_data_reads_csv(tmp_path: Path) -> None:
 
 
 def test_build_features_returns_clean_dataframe() -> None:
+    """build_features debe devolver un dataframe sin las columnas descartadas."""
     df = build_features(sample_raw_df(), CFG)
 
     assert "fbs" not in df.columns
@@ -32,6 +34,7 @@ def test_build_features_returns_clean_dataframe() -> None:
 
 
 def test_save_features_writes_parquet(tmp_path: Path) -> None:
+    """save_features debe escribir el dataframe en un archivo parquet legible."""
     df = build_features(sample_raw_df(), CFG)
     output_path = tmp_path / "features" / "corazon_features.parquet"
 

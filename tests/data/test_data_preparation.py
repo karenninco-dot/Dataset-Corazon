@@ -62,6 +62,7 @@ def sample_raw_df() -> pd.DataFrame:
 
 
 def test_convert_dtypes_sets_expected_types() -> None:
+    """convert_dtypes debe asignar el dtype correcto a cada columna."""
     df = convert_dtypes(sample_raw_df(), CFG)
 
     assert df["age"].dtype == "float64"
@@ -73,6 +74,7 @@ def test_convert_dtypes_sets_expected_types() -> None:
 
 
 def test_convert_dtypes_flags_invalid_category_as_missing() -> None:
+    """Un valor fuera del whitelist de categorías debe quedar como nulo."""
     raw_df = sample_raw_df()
     raw_df.loc[0, "sex"] = "unknown"
 
@@ -82,6 +84,7 @@ def test_convert_dtypes_flags_invalid_category_as_missing() -> None:
 
 
 def test_select_features_drops_target_na_duplicates_and_low_value_columns() -> None:
+    """select_features debe quitar columnas de bajo valor y filas duplicadas."""
     df = convert_dtypes(sample_raw_df(), CFG)
     df = pd.concat([df, df.iloc[[0]]], ignore_index=True)  # duplicate a row
 
@@ -94,6 +97,7 @@ def test_select_features_drops_target_na_duplicates_and_low_value_columns() -> N
 
 
 def test_select_features_drops_rows_with_missing_target() -> None:
+    """Filas sin valor en la columna objetivo deben ser eliminadas."""
     raw_df = sample_raw_df()
     raw_df.loc[0, "disease"] = None
 
