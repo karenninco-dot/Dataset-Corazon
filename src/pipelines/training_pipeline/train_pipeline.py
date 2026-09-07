@@ -24,6 +24,7 @@ from sklearn.pipeline import Pipeline
 
 from src.model.model_evaluation import evaluate_model
 from src.model.model_training import split_train_test, train_model
+from src.model.train_test_validation import validate_train_test_split
 
 logger = logging.getLogger(__name__)
 
@@ -77,6 +78,9 @@ def run(cfg: DictConfig) -> None:
 
     features_df = extract_data(cfg.data.feature)
     x_train, x_test, y_train, y_test = split_train_test(features_df, cfg)
+
+    logger.info("Validating train/test split")
+    validate_train_test_split(x_train, x_test, y_train, y_test)
 
     logger.info("Training Random Forest on %s rows", len(x_train))
     model = train_model(x_train, y_train, cfg)
