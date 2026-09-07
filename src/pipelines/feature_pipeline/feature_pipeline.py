@@ -21,6 +21,7 @@ import pandas as pd
 from omegaconf import DictConfig
 
 from src.data.data_preparation import convert_dtypes, select_features
+from src.data.data_validation import validate_features
 
 logger = logging.getLogger(__name__)
 
@@ -75,6 +76,7 @@ def run(cfg: DictConfig) -> None:
 
     raw_df = extract_data(cfg.data.raw)
     features_df = build_features(raw_df, cfg)
+    features_df = validate_features(features_df)
     save_features(features_df, cfg.data.feature)
 
     logger.info("Feature pipeline completed.")
