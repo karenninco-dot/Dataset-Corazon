@@ -9,6 +9,8 @@ hydra:
 data:
   raw: "data/01_raw/corazon_final_raw.csv"
   feature: "data/04_feature/corazon_features.parquet"
+  model: "data/06_models/corazon_classification_model.joblib"
+  train_metrics: "data/07_model_output/train_metrics.json"
 
 columns:
   numeric_continuous: ["age", "rest_bp", "chol", "old_peak"]
@@ -30,3 +32,18 @@ valid_categories:
   slope: ["1", "2", "3"]
   ca: ["0.0", "1.0", "2.0", "3.0"]
   disease: ["0", "1"]
+
+model_columns:
+  numeric: ["age", "chol", "max_hr", "old_peak", "ca"]
+  boolean: ["exang"]
+  categoric: ["sex", "chest_pain", "rest_ecg", "thal"]
+  categoric_ordinal: "slope"
+
+train:
+  test_size: 0.2
+  random_state: 42
+  random_forest:
+    criterion: "entropy"
+    max_depth: 9
+    max_features: 6
+    random_state: 42
