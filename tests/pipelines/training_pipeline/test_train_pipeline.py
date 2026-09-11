@@ -11,6 +11,7 @@ from src.pipelines.training_pipeline.train_pipeline import (
     extract_data,
     save_metrics,
     save_model,
+    save_validation_results,
 )
 
 
@@ -49,3 +50,17 @@ def test_save_metrics_writes_json_file(tmp_path: Path) -> None:
     assert output_path.exists()
     saved_metrics = json.loads(output_path.read_text())
     assert saved_metrics == metrics
+
+
+def test_save_validation_results_writes_json_file(tmp_path: Path) -> None:
+    """save_validation_results debe guardar un JSON legible con la comparación."""
+    validation_results = {
+        "accuracy": {"train": 0.98, "cv_mean": 0.81, "cv_std": 0.04, "test": 0.86}
+    }
+    output_path = tmp_path / "metrics" / "validation_metrics.json"
+
+    save_validation_results(validation_results, str(output_path))
+
+    assert output_path.exists()
+    saved_results = json.loads(output_path.read_text())
+    assert saved_results == validation_results
