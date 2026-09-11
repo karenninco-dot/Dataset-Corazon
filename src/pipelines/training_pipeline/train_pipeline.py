@@ -24,6 +24,7 @@ from sklearn.pipeline import Pipeline
 
 from src.model.model_evaluation import evaluate_model
 from src.model.model_training import split_train_test, train_model
+from src.model.model_validation import compare_train_cv_test, cross_validate_model
 from src.model.train_test_validation import validate_train_test_split
 
 logger = logging.getLogger(__name__)
@@ -71,6 +72,23 @@ def save_metrics(metrics: dict[str, float], metrics_path: str) -> None:
     logger.info("Saved evaluation metrics to %s", output_path)
 
 
+def save_validation_results(
+    validation_results: dict[str, dict[str, float]], validation_path: str
+) -> None:
+    """Persist the train/CV/test comparison as a JSON file.
+
+    Args:
+        validation_results: Output of
+            :func:`src.model.model_validation.compare_train_cv_test`.
+        validation_path: Destination path for the JSON file. Parent
+            directories are created if they do not exist.
+    """
+    output_path = Path(validation_path)
+    output_path.parent.mkdir(parents=True, exist_ok=True)
+    output_path.write_text(json.dumps(validation_results, indent=2))
+    logger.info("Saved validation results to %s", output_path)
+
+
 @hydra.main(version_base=None, config_path="../../../conf", config_name="config")
 def run(cfg: DictConfig) -> None:
     """Run the training pipeline end to end: split, train, evaluate, save."""
@@ -88,8 +106,16 @@ def run(cfg: DictConfig) -> None:
     metrics = evaluate_model(model, x_test, y_test)
     logger.info("Evaluation metrics: %s", metrics)
 
+    logger.info("Running %s-fold cross-validation on train", cfg.validation.cv_folds)
+    cv_results = cross_validate_model(x_train, y_train, cfg)
+    validation_results = compare_train_cv_test(
+        model, (x_train, y_train), (x_test, y_test), cv_results
+    )
+    logger.info("Train/CV/test comparison: %s", validation_results)
+
     save_model(model, cfg.data.model)
     save_metrics(metrics, cfg.data.train_metrics)
+    save_validation_results(validation_results, cfg.data.validation_metrics)
 
     logger.info("Training pipeline completed.")
 
