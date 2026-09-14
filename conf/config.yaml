@@ -12,6 +12,8 @@ data:
   model: "data/06_models/corazon_classification_model.joblib"
   train_metrics: "data/07_model_output/train_metrics.json"
   validation_metrics: "data/07_model_output/validation_metrics.json"
+  new_patients: "data/05_model_input/nuevos_pacientes.csv"
+  predictions: "data/08_reporting/predicciones.csv"
 
 columns:
   numeric_continuous: ["age", "rest_bp", "chol", "old_peak"]
