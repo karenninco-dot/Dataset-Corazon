@@ -169,3 +169,21 @@ This project was generated from [@JoseRZapata]'s [data science project template]
 [Pytest]: https://docs.pytest.org/en/latest/
 [Ruff]: https://docs.astral.sh/ruff/
 [UV]: https://docs.astral.sh/uv/
+
+## Demo Streamlit — Predicción individual
+
+Aplicación web para predecir el riesgo de enfermedad cardíaca a partir de los datos de un paciente, usando el modelo entrenado por el pipeline de producción (`src/pipelines/training_pipeline/`).
+
+**Cómo ejecutarla localmente:**
+
+```bash
+uv run streamlit run streamlit_app.py
+```
+
+Se abre en `http://localhost:8501`. Completa el formulario con los datos del paciente y presiona "Predecir".
+
+**Demo publicada:** https://dataset-corazon-46nghendqmbmpcjocyfrk2.streamlit.app/
+
+**Evidencia de funcionamiento:**
+
+![Predicción individual funcionando](images/evidencia_demo_online.png)
