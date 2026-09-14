@@ -182,8 +182,21 @@ uv run streamlit run streamlit_app.py
 
 Se abre en `http://localhost:8501`. Completa el formulario con los datos del paciente y presiona "Predecir".
 
-**Demo publicada:** https://dataset-corazon-46nghendqmbmpcjocyfrk2.streamlit.app/
+**Demo publicada:** https://dataset-corazon-nt4tvuf6cjlh9upzwysvlp.streamlit.app/
 
 **Evidencia de funcionamiento:**
 
 ![Predicción individual funcionando](images/evidencia_demo_online.png)
+
+## Demo Streamlit — Procesamiento batch
+
+Pestaña adicional de la misma app para predecir varios pacientes a la vez. Reutiliza `generate_predictions` del pipeline de inferencia (`src/pipelines/inference_pipeline/`), así que el resultado es idéntico al que produce el pipeline por línea de comandos.
+
+**Cómo usarla:** en la pestaña "Procesamiento batch", descarga el archivo de ejemplo (o usa `data/05_model_input/nuevos_pacientes.csv`), súbelo, y descarga las predicciones generadas.
+
+**Archivo de ejemplo de entrada:** `data/05_model_input/nuevos_pacientes.csv`
+**Archivo de ejemplo de salida:** `data/08_reporting/predicciones.csv`
+
+**Evidencia de funcionamiento:**
+
+![Procesamiento batch funcionando](images/evidencia_demo_batch.png)

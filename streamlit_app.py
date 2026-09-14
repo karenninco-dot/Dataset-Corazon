@@ -4,6 +4,9 @@ Individual prediction: lets the user enter one patient's data through a
 web form (in Spanish, with friendly category labels) and shows whether
 the model predicts heart disease.
 
+Batch prediction: lets the user upload a CSV with several patients and
+download the predictions for all of them at once.
+
 How to run locally:
     uv run streamlit run streamlit_app.py
 """
@@ -15,8 +18,11 @@ import streamlit as st
 from joblib import load
 from sklearn.pipeline import Pipeline
 
+from src.pipelines.inference_pipeline.inference_pipeline import generate_predictions
+
 MODEL_PATH = "data/06_models/corazon_classification_model.joblib"
 HEART_IMAGE_PATH = "notebooks/7-deploy/images/corazon.jpg"
+SAMPLE_INPUT_PATH = "data/05_model_input/nuevos_pacientes.csv"
 
 # Mapas de opciones amigables -> valor real esperado por el modelo.
 SEX_OPTIONS = {"Masculino": "Male", "Femenino": "Female"}
@@ -182,6 +188,52 @@ def individual_prediction_tab(model: Pipeline) -> None:
         render_prediction(prediction)
 
 
+def batch_prediction_tab(model: Pipeline) -> None:
+    """Render the batch prediction tab: upload, predict and download.
+
+    Reuses ``generate_predictions`` from the production inference
+    pipeline, so a batch of patients uploaded here is scored exactly the
+    same way as when the pipeline runs from the command line.
+
+    Args:
+        model: Fitted pipeline (preprocessor + model).
+    """
+    st.subheader("Procesamiento batch")
+    st.write(
+        "Sube un archivo CSV con los datos de varios pacientes (mismas columnas que en la "
+        "predicción individual) para obtener las predicciones de todos a la vez."
+    )
+
+    with open(SAMPLE_INPUT_PATH, "rb") as sample_file:
+        st.download_button(
+            label="Descargar archivo de ejemplo",
+            data=sample_file.read(),
+            file_name="nuevos_pacientes.csv",
+            mime="text/csv",
+        )
+
+    uploaded_file = st.file_uploader("Archivo CSV de pacientes:", type="csv")
+    if uploaded_file is None:
+        return
+
+    try:
+        new_patients = pd.read_csv(uploaded_file)
+        predictions = generate_predictions(model, new_patients)
+    except (ValueError, KeyError) as error:
+        st.error(f"No se pudo procesar el archivo: {error}")
+        return
+
+    st.write(f"Predicciones generadas para {len(predictions)} pacientes:")
+    st.dataframe(predictions)
+
+    st.download_button(
+        label="Descargar predicciones",
+        data=predictions.to_csv(index=False).encode("utf-8"),
+        file_name="predicciones.csv",
+        mime="text/csv",
+    )
+
+
 def main() -> None:
     """Configure the page, load the model and render the app."""
     st.set_page_config(page_title="Predicción de enfermedad cardíaca", page_icon="🫀")
@@ -197,7 +249,12 @@ def main() -> None:
     )
 
     model = load_model(MODEL_PATH)
-    individual_prediction_tab(model)
+
+    tab_individual, tab_batch = st.tabs(["Predicción individual", "Procesamiento batch"])
+    with tab_individual:
+        individual_prediction_tab(model)
+    with tab_batch:
+        batch_prediction_tab(model)
 
 
 if __name__ == "__main__":
