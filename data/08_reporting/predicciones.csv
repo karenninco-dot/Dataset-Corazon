@@ -1,0 +1,9 @@
+age,sex,chest_pain,chol,rest_ecg,max_hr,exang,old_peak,slope,ca,thal,disease_prediction
+63.0,Male,typical,233.0,left ventricular hypertrophy,150,False,2.3,3,0,fixed,0
+67.0,Male,asymptomatic,286.0,left ventricular hypertrophy,108,True,1.5,2,3,normal,1
+67.0,Male,asymptomatic,229.0,left ventricular hypertrophy,129,True,2.6,2,2,reversable,1
+37.0,Male,nonanginal,250.0,normal,187,False,3.5,3,0,normal,0
+41.0,Female,nontypical,204.0,left ventricular hypertrophy,172,False,1.4,1,0,normal,0
+56.0,Male,nontypical,236.0,normal,178,False,0.8,1,0,normal,0
+62.0,Female,asymptomatic,268.0,left ventricular hypertrophy,160,False,3.6,3,2,normal,1
+57.0,Female,asymptomatic,354.0,normal,163,True,0.6,1,0,normal,0
